@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FREE BALL 8</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@700;800;900&family=Oswald:wght@700&display=swap" rel="stylesheet">
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+:root{
+  color-scheme:light dark;
+  --bg:#0d2417;--fg:#eee;--btn:#1d6b3a;--btnfg:#fff;
+  --gold:#ffe875;--gold-mid:#f5a623;--wood-top:#7c3812;--wood-bot:#4a210b;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px)
+}
+html,body{margin:0;min-height:100vh}
+body{
+  background:radial-gradient(circle at center,#156e3b 0%,#09381d 85%,#041a0d 100%);
+  color:var(--fg);
+  font-family:'Cairo',system-ui,"Segoe UI",Tahoma,sans-serif;
+  display:flex;flex-direction:column;align-items:center;gap:10px;padding:12px;
+  overflow-x:hidden
+}
+
+/* ===== الواجهة الأمامية (FREE BALL 8) ===== */
+#lobby{
+  position:fixed;inset:0;z-index:50;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:16px 24px;
+  background:
+    radial-gradient(circle at 16% 52%,rgba(245,185,21,.22),transparent 30%),
+    radial-gradient(circle at 84% 52%,rgba(255,255,255,.14),transparent 28%),
+    radial-gradient(circle at center,#15703c 0%,#093b1e 85%,#041d0f 100%);
+  border:14px solid #3a1907;
+  box-shadow:inset 0 0 55px rgba(0,0,0,.85);
+  transition:opacity .25s ease
+}
+#lobby.hide{opacity:0;pointer-events:none}
+
+.lobby-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;z-index:2}
+.pill-box{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(12,18,24,.88);border:2px solid var(--gold-mid);
+  border-radius:12px;padding:6px 14px;font-family:'Oswald','Cairo',sans-serif;font-weight:700
+}
+.avatar-wrap{position:relative;width:38px;height:38px;flex-shrink:0}
+.avatar-img{
+  width:38px;height:38px;border-radius:50%;object-fit:cover;
+  border:2px solid var(--gold);background:#1b2838;display:flex;align-items:center;justify-content:center;font-size:19px;
+  cursor:pointer;overflow:hidden
+}
+.cam-mini{
+  position:absolute;bottom:-3px;right:-3px;width:18px;height:18px;border-radius:50%;
+  background:var(--gold-mid);color:#140903;border:1px solid #fff;
+  font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0
+}
+.lvl-wrap{display:flex;align-items:center;gap:6px;margin-top:2px;flex-wrap:wrap}
+.lvl-tag{
+  background:linear-gradient(90deg,var(--gold-mid),var(--gold));
+  color:#1c1205;font-size:11px;font-weight:900;padding:1px 8px;border-radius:6px
+}
+.xp-mini{
+  width:64px;height:7px;background:rgba(255,255,255,.18);border-radius:99px;overflow:hidden;border:1px solid rgba(255,232,117,.4)
+}
+.xp-fill{height:100%;width:0%;background:linear-gradient(90deg,#4ade80,var(--gold));transition:width .25s ease}
+
+.lang-btn,.google-btn{
+  background:linear-gradient(180deg,var(--wood-top),var(--wood-bot));
+  color:var(--gold);border:2px solid var(--gold);border-radius:10px;
+  padding:6px 13px;font-family:'Cairo',sans-serif;font-weight:800;font-size:13px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:7px
+}
+.google-btn{
+  background:linear-gradient(180deg,#ffffff,#e6e6e6);
+  color:#1f1f1f;border-color:#f5a623
+}
+.g-badge{
+  width:18px;height:18px;border-radius:50%;background:#4285F4;color:#fff;
+  font-family:'Oswald',sans-serif;font-size:12px;font-weight:700;
+  display:inline-flex;align-items:center;justify-content:center
+}
+
+.lobby-logo{text-align:center;z-index:2}
+.ball8-top{
+  width:56px;height:56px;margin:0 auto -14px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#444,#090909 75%);
+  border:3px solid var(--gold-mid);display:flex;align-items:center;justify-content:center;
+  position:relative;z-index:2;box-shadow:0 0 22px rgba(245,166,35,.65)
+}
+.ball8-top span{
+  width:25px;height:25px;border-radius:50%;background:#fff;color:#000;
+  font-family:'Oswald',sans-serif;font-weight:900;font-size:16px;
+  display:flex;align-items:center;justify-content:center
+}
+.title-card{
+  display:inline-block;background:linear-gradient(180deg,#1b2838,#0d1520);
+  border:4px solid var(--gold-mid);border-radius:18px;padding:10px 38px 8px;
+  box-shadow:0 10px 28px rgba(0,0,0,.8),0 0 24px rgba(245,166,35,.45)
+}
+.title-card h1{
+  margin:0;font-family:'Oswald',sans-serif;font-size:clamp(34px,6vw,54px);line-height:1.05;
+  background:linear-gradient(180deg,#fff 15%,var(--gold) 55%,var(--gold-mid) 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent
+}
+.title-card .b8{
+  background:linear-gradient(180deg,#7dd3fc 10%,#0284c7 90%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent
+}
+.title-sub{margin-top:6px;color:var(--gold);font-size:13px;font-weight:800}
+
+.lobby-menu{width:100%;max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:12px;z-index:2}
+.wood-btn{
+  background:linear-gradient(180deg,var(--wood-top),var(--wood-bot));
+  color:var(--gold);border:3px solid var(--gold);border-radius:15px;
+  padding:11px 14px;font-family:'Cairo',sans-serif;font-weight:800;font-size:15px;
+  cursor:pointer;box-shadow:0 5px 0 #260f03,0 0 18px rgba(255,215,0,.3);
+  transition:transform .12s ease
+}
+.wood-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #260f03}
+.play-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.play-main{flex:1;min-width:220px;max-width:360px;padding:13px 20px;font-size:clamp(18px,3vw,24px);font-weight:900;border-width:4px}
+.lobby-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+
+.lobby-bottom{text-align:center;z-index:2}
+.rank-badge{
+  display:inline-block;background:rgba(12,18,24,.9);border:2px solid var(--gold-mid);
+  border-radius:10px;padding:5px 22px;font-size:14px;font-weight:800
+}
+
+/* ===== شاشة اللعبة ===== */
+#gameWrap{
+  width:100%;max-width:1100px;
+  display:flex;flex-direction:column;align-items:center;gap:10px
+}
+.game-head{width:100%;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.game-head h2{font-size:1.25rem;margin:0;color:var(--gold)}
+#bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:center}
+canvas#c{width:100%;max-width:1100px;height:auto;aspect-ratio:880/480;touch-action:none;border-radius:14px;display:block;box-shadow:0 12px 32px rgba(0,0,0,.65)}
+.gbtn{background:linear-gradient(180deg,var(--wood-top),var(--wood-bot));color:var(--gold);border:2px solid var(--gold-mid);border-radius:8px;padding:7px 15px;font-family:'Cairo',sans-serif;font-weight:800;font-size:.9rem;cursor:pointer}
+#help{margin:0;font-size:.9rem;opacity:.88;text-align:center;max-width:760px}
+
+/* نوافذ منبثقة */
+.modal-bg{
+  position:fixed;inset:0;z-index:80;background:rgba(0,0,0,.78);
+  display:none;align-items:center;justify-content:center;padding:16px
+}
+.info-card{
+  background:linear-gradient(180deg,#2b1407,#140903);border:3px solid var(--gold);
+  border-radius:18px;padding:24px;max-width:420px;width:100%;text-align:center
+}
+.info-card h3{margin:0 0 10px;color:var(--gold);font-size:1.3rem}
+.info-card p{margin:0 0 14px;color:#eee;font-size:.95rem}
+.g-input{
+  width:100%;padding:10px 12px;border-radius:10px;border:2px solid var(--gold-mid);
+  background:#120a05;color:#fff;font-family:'Cairo',sans-serif;font-size:14px;
+  margin-bottom:10px;outline:none
+}
+.pic-preview{
+  width:72px;height:72px;border-radius:50%;object-fit:cover;
+  border:2px solid var(--gold);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;
+  background:#1b2838;font-size:32px;overflow:hidden
+}
+
+@media(max-width:680px){
+  .lobby-grid{grid-template-columns:repeat(2,1fr)}
+  .play-main{max-width:100%;width:100%}
+}
+</style>
+</head>
+<body>
+
+<input type="file" id="avatarFileInput" accept="image/*" style="display:none">
+
+<!-- ==================== الواجهة الأمامية ==================== -->
+<div id="lobby">
+  <div class="lobby-top">
+    <div class="pill-box">
+      <div class="avatar-wrap">
+        <div class="avatar-img" id="playerAvatar" title="تغيير الصورة">😎</div>
+        <button class="cam-mini" id="quickCamBtn" type="button" title="رفع صورة">📷</button>
+      </div>
+      <div>
+        <div style="font-size:14px" id="playerName">أحمد مجاهد</div>
+        <div class="lvl-wrap">
+          <span class="lvl-tag" id="lvlBadge">المستوى 1 / 100</span>
+          <div class="xp-mini" title="XP"><div class="xp-fill" id="xpFill"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <button class="google-btn" id="googleBtn" type="button">
+        <span class="g-badge">G</span>
+        <span id="googleBtnText">دخول بحساب جوجل</span>
+      </button>
+      <button class="lang-btn" id="langBtn" type="button">English</button>
+      <div class="pill-box">🪙 <span id="coinsVal">0</span></div>
+    </div>
+  </div>
+
+  <div class="lobby-logo">
+    <div class="ball8-top"><span>8</span></div>
+    <div class="title-card">
+      <h1>FREE BALL <span class="b8">8</span></h1>
+    </div>
+    <div class="title-sub" data-ar="• أتقن الطاولة • العب الآن •" data-en="• MASTER THE TABLE • PLAY NOW •">• أتقن الطاولة • العب الآن •</div>
+  </div>
+
+  <div class="lobby-menu">
+    <div class="play-row">
+      <button class="wood-btn play-main" id="btnPlayAI" type="button" data-ar="🤖 العب ضد الكمبيوتر" data-en="🤖 PLAY VS AI">🤖 العب ضد الكمبيوتر</button>
+      <button class="wood-btn play-main" id="btnPlayFriend" type="button" data-ar="👥 العب مع صاحبك (نفس الجهاز)" data-en="👥 PLAY WITH FRIEND (2P)">👥 العب مع صاحبك (نفس الجهاز)</button>
+    </div>
+    <div class="lobby-grid">
+      <button class="wood-btn" id="btnUploadPic" type="button" data-ar="🖼️ إضافة صورة للحساب" data-en="🖼️ UPLOAD ACCOUNT PHOTO">🖼️ إضافة صورة للحساب</button>
+      <button class="wood-btn" data-info="challenges" type="button" data-ar="📅 التحديات اليومية" data-en="📅 DAILY CHALLENGES">📅 التحديات اليومية</button>
+      <button class="wood-btn" data-info="rank" type="button" data-ar="🏆 المتصدرون" data-en="🏆 LEADERBOARDS">🏆 المتصدرون</button>
+      <button class="wood-btn" data-info="bonus" type="button" data-ar="🎁 مكافأة مباراة" data-en="🎁 MATCH BONUS">🎁 مكافأة مباراة</button>
+      <button class="wood-btn" data-info="rerack" type="button" data-ar="🔄 إعادة ضبط الطاولة" data-en="🔄 RESET TABLE">🔄 إعادة ضبط الطاولة</button>
+      <button class="wood-btn" data-info="help" type="button" data-ar="📖 طريقة اللعب" data-en="📖 HOW TO PLAY">📖 طريقة اللعب</button>
+    </div>
+  </div>
+
+  <div class="lobby-bottom">
+    <div class="rank-badge" id="rankBadge">🏅 الترتيب العالمي: #452</div>
+  </div>
+</div>
+
+<!-- ==================== شاشة اللعبة ==================== -->
+<div id="gameWrap">
+  <div class="game-head">
+    <h2 id="gTitle">🎱 بلياردو ضد الكمبيوتر</h2>
+    <div id="bar">
+      <span id="s"></span>
+      <b id="r"></b>
+      <button class="gbtn" id="rs" type="button">لعبة جديدة</button>
+      <button class="gbtn" id="backLobby" type="button">الواجهة</button>
+      <button class="gbtn" id="gameLangBtn" type="button">English</button>
+    </div>
+  </div>
+  <canvas id="c"></canvas>
+  <p id="help">أنت الكور المصمتة (1–7) والكمبيوتر المخططة (9–15). دخّل كل كورك وبعدين الكورة 8 السودا عشان تكسب. اسحب للخلف عشان تصوّب، والخط بيوريك الكورة هتروح فين، وشريط القوة على الجنب. الكور المتبقية لكل فريق تحت الطاولة.</p>
+</div>
+
+<!-- نافذة معلومات عامة -->
+<div class="modal-bg" id="infoModal">
+  <div class="info-card">
+    <h3 id="mTitle"></h3>
+    <p id="mBody"></p>
+    <button class="wood-btn" id="mClose" type="button" style="padding:8px 26px;font-size:15px">حسناً</button>
+  </div>
+</div>
+
+<!-- نافذة الحساب وصورة الحساب وتسجيل جوجل -->
+<div class="modal-bg" id="googleModal">
+  <div class="info-card">
+    <h3 id="gModalTitle">حساب اللاعب وصورة الحساب</h3>
+    <p id="gModalDesc">اختر صورة لحسابك وسجل اسمك أو بريدك على جوجل لحفظ تقدمك.</p>
+    <div class="pic-preview" id="modalPicPreview">😎</div>
+    <button class="wood-btn" id="choosePicInsideModal" type="button" style="padding:6px 16px;font-size:13px;margin-bottom:10px">📷 اختيار صورة من الجهاز</button>
+    <input class="g-input" id="gNameInput" type="text" placeholder="الاسم (مثال: أحمد مجاهد)">
+    <input class="g-input" id="gEmailInput" type="email" placeholder="example@gmail.com">
+    <div id="gsiNativeBtn" style="display:flex;justify-content:center;margin-bottom:10px"></div>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button class="wood-btn" id="gSaveBtn" type="button" style="padding:8px 20px;font-size:14px">حفظ الحساب</button>
+      <button class="wood-btn" id="gCancelBtn" type="button" style="padding:8px 18px;font-size:14px">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===== إعداد Google Client ID اختياري ===== */
+const GOOGLE_CLIENT_ID = '';
+
+/* ===== حفظ التقدم والمستوى والفلوس وصورة الحساب ===== */
+const STORAGE_KEY = 'free_ball_8_profile_v2';
+const defaultProfile = {
+  name: 'أحمد مجاهد',
+  email: '',
+  picture: '',
+  coins: 1500,
+  level: 1,
+  xp: 0,
+  matchesPlayed: 0,
+  wins: 0
+};
+
+function loadProfile() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return Object.assign({}, defaultProfile, saved || {});
+  } catch (e) {
+    return Object.assign({}, defaultProfile);
+  }
+}
+
+let profile = loadProfile();
+let draftPicture = profile.picture;
+
+function saveProfile() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(profile));
+  } catch (e) {}
+}
+
+function addCoins(amount) {
+  profile.coins = Math.max(0, profile.coins + amount);
+  saveProfile();
+  renderProfileUI();
+}
+
+function gainPlayProgress(isWin = false) {
+  profile.matchesPlayed += 1;
+  if (isWin) profile.wins += 1;
+
+  if (profile.level < 100) {
+    const xpGain = isWin ? 100 : 50;
+    profile.xp += xpGain;
+    while (profile.xp >= 100 && profile.level < 100) {
+      profile.xp -= 100;
+      profile.level += 1;
+    }
+    if (profile.level >= 100) {
+      profile.level = 100;
+      profile.xp = 100;
+    }
+  }
+  saveProfile();
+  renderProfileUI();
+}
+
+/* ===== إدارة اللغة والواجهة ===== */
+const UI = {
+  ar: {
+    langBtn: 'English',
+    gTitleAI: '🎱 بلياردو ضد الكمبيوتر',
+    gTitle2P: '👥 بلياردو مع صاحبك (نفس الجهاز)',
+    rs: 'لعبة جديدة',
+    backLobby: 'الواجهة',
+    mClose: 'حسناً',
+    googleLogin: 'دخول بحساب جوجل',
+    googleLinked: 'حساب جوجل: ',
+    lvlText: (lv) => `المستوى ${lv} / 100`,
+    rankText: (lv, wins) => `🏅 الترتيب العالمي: #${Math.max(1, 500 - lv * 4 - wins * 3)}`,
+    helpAI: 'أنت الكور المصمتة (1–7) والكمبيوتر المخططة (9–15). دخّل كل كورك وبعدين الكورة 8 السودا عشان تكسب. اسحب للخلف عشان تصوّب، والخط بيوريك الكورة هتروح فين، وشريط القوة على الجنب.',
+    help2P: 'لعب ثنائي على نفس الجهاز: اللاعب الأول بالكور المصمتة (1–7) وصاحبك بالكور المخططة (9–15). كل لاعب يسدد دوره بالتناوب ثم يدخل الكورة 8 السودا للفوز.',
+    pwrLabel: 'القوة',
+    youLabel: 'أنت',
+    p2Label: 'صاحبك',
+    aiLabel: 'الكمبيوتر',
+    p1Solids: 'أنت — المصمتة',
+    p2Stripes2P: 'صاحبك — المخططة',
+    p2StripesAI: 'الكمبيوتر — المخططة',
+    yourTurn: '🟢 دورك',
+    p2Turn: '🟡 دور صاحبك',
+    aiTurn: '🤖 دور الكمبيوتر',
+    initMsgAI: 'دورك! أنت المصمتة (1–7)',
+    initMsg2P: 'دورك أولاً! أنت المصمتة (1–7) وصاحبك المخططة (9–15)',
+    winMsg: '🏆 مبروك، كسبت! زادت فلوسك ومستواك',
+    loseMsg: '🤖 الكمبيوتر كسب عليك. زادت خبرتك وارتفع مستواك!',
+    p2WinMsg: '🎉 صاحبك كسب الجولة! زادت خبرتك لمستوى أعلى',
+    whitePot: ': البيضا وقعت! الدور اتحوّل',
+    pottedKeep: ' دخّل كورة ويكمّل 👍',
+    turnOf: 'الدور على ',
+    aiAimMsg: '🤖 الكمبيوتر بيصوّب...',
+    info: {
+      challenges: ['📅 التحديات اليومية', 'العب ضد الكمبيوتر أو مع صاحبك لرفع مستواك من 1 إلى 100 وزيادة فلوسك!'],
+      rank: ['🏆 لوحة المتصدرين', 'ترتيبك يتحسن تلقائياً كلما ارتفع مستواك وزادت انتصاراتك.'],
+      bonus: ['🎁 مكافأة مباراة', 'تمت إضافة +750 عملة إلى رصيدك وزيادة خبرة مستواك!'],
+      rerack: ['🔄 إعادة ضبط الطاولة', 'تم تجهيز الكرات من جديد لبدء جولة نظيفة.'],
+      help: ['📖 طريقة اللعب', 'اسحب للخلف من الكرة البيضاء لتحديد الزاوية والقوة، ثم أفلت للتسديد.']
+    }
+  },
+  en: {
+    langBtn: 'العربية',
+    gTitleAI: '🎱 8-Ball Pool vs AI',
+    gTitle2P: '👥 2P Pass & Play (Same Device)',
+    rs: 'New Game',
+    backLobby: 'Main Menu',
+    mClose: 'OK',
+    googleLogin: 'Sign in with Google',
+    googleLinked: 'Google: ',
+    lvlText: (lv) => `LVL ${lv} / 100`,
+    rankText: (lv, wins) => `🏅 GLOBAL RANK: #${Math.max(1, 500 - lv * 4 - wins * 3)}`,
+    helpAI: 'You play Solids (1–7) and AI plays Stripes (9–15). Pot all your balls then the 8-ball to win. Drag back to aim with guide lines and power bar.',
+    help2P: 'Same-device 2P: You play Solids (1–7) and your friend plays Stripes (9–15). Take turns shooting and pot the 8-ball after clearing your group.',
+    pwrLabel: 'POWER',
+    youLabel: 'YOU',
+    p2Label: 'FRIEND',
+    aiLabel: 'AI',
+    p1Solids: 'YOU — SOLIDS',
+    p2Stripes2P: 'FRIEND — STRIPES',
+    p2StripesAI: 'AI — STRIPES',
+    yourTurn: '🟢 YOUR TURN',
+    p2Turn: '🟡 FRIEND TURN',
+    aiTurn: '🤖 AI TURN',
+    initMsgAI: 'Your turn! You are Solids (1–7)',
+    initMsg2P: 'Your turn first! You: Solids (1–7), Friend: Stripes (9–15)',
+    winMsg: '🏆 You won! Coins & Level increased',
+    loseMsg: '🤖 AI won! You still gained XP toward next level',
+    p2WinMsg: '🎉 Your friend won! You gained XP toward next level',
+    whitePot: ': Cue ball potted! Turn switched',
+    pottedKeep: ' potted a ball and continues 👍',
+    turnOf: 'Turn: ',
+    aiAimMsg: '🤖 AI is aiming...',
+    info: {
+      challenges: ['📅 Daily Challenges', 'Play solo or with a friend to level up from 1 to 100 and earn coins!'],
+      rank: ['🏆 Leaderboards', 'Your rank climbs as your level and wins increase.'],
+      bonus: ['🎁 Match Bonus', '+750 coins added and progress granted toward your next level!'],
+      rerack: ['🔄 Table Reset', 'Balls have been re-racked for a fresh start.'],
+      help: ['📖 How to Play', 'Drag backward from the cue ball to set aim and power, then release to shoot.']
+    }
+  }
+};
+
+let curLang = 'ar';
+let mode2P = false;
+const t = () => UI[curLang];
+
+function renderAvatarBox(el, pic) {
+  if (pic) {
+    el.innerHTML = `<img src="${pic}" alt="Avatar" style="width:100%;height:100%;object-fit:cover">`;
+  } else {
+    el.textContent = '😎';
+  }
+}
+
+function renderProfileUI() {
+  document.getElementById('playerName').textContent = profile.name || 'أحمد مجاهد';
+  document.getElementById('coinsVal').textContent = profile.coins.toLocaleString();
+  document.getElementById('lvlBadge').textContent = t().lvlText(profile.level);
+  document.getElementById('xpFill').style.width = (profile.level >= 100 ? 100 : profile.xp) + '%';
+  document.getElementById('rankBadge').textContent = t().rankText(profile.level, profile.wins);
+  renderAvatarBox(document.getElementById('playerAvatar'), profile.picture);
+
+  document.getElementById('googleBtnText').textContent = profile.email
+    ? t().googleLinked + profile.email
+    : t().googleLogin;
+}
+
+function applyLang() {
+  document.documentElement.lang = curLang;
+  document.documentElement.dir = curLang === 'ar' ? 'rtl' : 'ltr';
+  document.getElementById('langBtn').textContent = t().langBtn;
+  document.getElementById('gameLangBtn').textContent = t().langBtn;
+  document.getElementById('gTitle').textContent = mode2P ? t().gTitle2P : t().gTitleAI;
+  document.getElementById('rs').textContent = t().rs;
+  document.getElementById('backLobby').textContent = t().backLobby;
+  document.getElementById('mClose').textContent = t().mClose;
+  document.getElementById('help').textContent = mode2P ? t().help2P : t().helpAI;
+
+  document.querySelectorAll('#lobby [data-ar]').forEach(el => {
+    el.textContent = el.getAttribute(curLang === 'ar' ? 'data-ar' : 'data-en');
+  });
+  renderProfileUI();
+  upd();
+}
+
+function toggleLang() {
+  curLang = curLang === 'ar' ? 'en' : 'ar';
+  applyLang();
+}
+
+function openLobby() {
+  const l = document.getElementById('lobby');
+  l.style.display = 'flex';
+  requestAnimationFrame(() => l.classList.remove('hide'));
+}
+
+function closeLobby() {
+  const l = document.getElementById('lobby');
+  l.classList.add('hide');
+  setTimeout(() => { l.style.display = 'none'; }, 240);
+}
+
+function showModal(key) {
+  if (key === 'bonus') {
+    addCoins(750);
+    gainPlayProgress(false);
+  }
+  if (key === 'rerack') init();
+  const [title, body] = t().info[key];
+  document.getElementById('mTitle').textContent = title;
+  document.getElementById('mBody').textContent = body;
+  document.getElementById('infoModal').style.display = 'flex';
+}
+
+/* ===== رفع صورة الحساب وتسجيل الدخول بحساب جوجل ===== */
+const avatarFileInput = document.getElementById('avatarFileInput');
+
+function triggerPhotoUpload() {
+  avatarFileInput.click();
+}
+
+avatarFileInput.addEventListener('change', (e) => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      // تصغير وضغط الصورة لحفظها بسلاسة في التخزين المحلي
+      const c = document.createElement('canvas');
+      const size = 180;
+      c.width = size; c.height = size;
+      const cx = c.getContext('2d');
+      const minSide = Math.min(img.width, img.height);
+      const sx = (img.width - minSide) / 2;
+      const sy = (img.height - minSide) / 2;
+      cx.drawImage(img, sx, sy, minSide, minSide, 0, 0, size, size);
+      const compressed = c.toDataURL('image/jpeg', 0.85);
+
+      if (document.getElementById('googleModal').style.display === 'flex') {
+        draftPicture = compressed;
+        renderAvatarBox(document.getElementById('modalPicPreview'), draftPicture);
+      } else {
+        profile.picture = compressed;
+        draftPicture = compressed;
+        saveProfile();
+        renderProfileUI();
+      }
+    };
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+  avatarFileInput.value = '';
+});
+
+function decodeJwtPayload(token) {
+  try {
+    const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+    const json = decodeURIComponent(atob(base64).split('').map(c =>
+      '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    ).join(''));
+    return JSON.parse(json);
+  } catch (e) {
+    return null;
+  }
+}
+
+window.addEventListener('load', () => {
+  if (GOOGLE_CLIENT_ID && window.google && google.accounts && google.accounts.id) {
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: (res) => {
+        const data = decodeJwtPayload(res.credential);
+        if (data) {
+          profile.name = data.name || profile.name;
+          profile.email = data.email || '';
+          if (data.picture) profile.picture = data.picture;
+          saveProfile();
+          renderProfileUI();
+          document.getElementById('googleModal').style.display = 'none';
+        }
+      }
+    });
+    google.accounts.id.renderButton(document.getElementById('gsiNativeBtn'), {
+      theme: 'filled_blue', size: 'medium', text: 'signin_with'
+    });
+  }
+});
+
+function openAccountModal() {
+  draftPicture = profile.picture;
+  renderAvatarBox(document.getElementById('modalPicPreview'), draftPicture);
+  document.getElementById('gNameInput').value = profile.name || '';
+  document.getElementById('gEmailInput').value = profile.email || '';
+  document.getElementById('googleModal').style.display = 'flex';
+}
+
+document.getElementById('googleBtn').onclick = openAccountModal;
+document.getElementById('btnUploadPic').onclick = openAccountModal;
+document.getElementById('playerAvatar').onclick = triggerPhotoUpload;
+document.getElementById('quickCamBtn').onclick = triggerPhotoUpload;
+document.getElementById('choosePicInsideModal').onclick = triggerPhotoUpload;
+
+document.getElementById('gSaveBtn').onclick = () => {
+  const nm = document.getElementById('gNameInput').value.trim();
+  const em = document.getElementById('gEmailInput').value.trim();
+  if (nm) profile.name = nm;
+  profile.email = em;
+  profile.picture = draftPicture;
+  saveProfile();
+  renderProfileUI();
+  document.getElementById('googleModal').style.display = 'none';
+};
+
+document.getElementById('gCancelBtn').onclick = () => {
+  document.getElementById('googleModal').style.display = 'none';
+};
+
+document.getElementById('langBtn').onclick = toggleLang;
+document.getElementById('gameLangBtn').onclick = toggleLang;
+document.getElementById('btnPlayAI').onclick = () => { mode2P = false; applyLang(); init(); closeLobby(); };
+document.getElementById('btnPlayFriend').onclick = () => { mode2P = true; applyLang(); init(); closeLobby(); };
+document.getElementById('backLobby').onclick = openLobby;
+document.getElementById('mClose').onclick = () => { document.getElementById('infoModal').style.display = 'none'; };
+document.querySelectorAll('[data-info]').forEach(btn => {
+  btn.onclick = () => showModal(btn.getAttribute('data-info'));
+});
+
+/* ===== كود اللعبة الأصلي مع دعم اللعب مع صاحبك على نفس الجهاز ===== */
+const QUALITY=4;
+const Sc=QUALITY,W=800,H=400,CW=880,CH=480;
+const cv=document.getElementById('c'),g=cv.getContext('2d');
+cv.width=CW*Sc;cv.height=CH*Sc;
+const L=34,T=34,RR=766,B=366,R=14,PR=24;
+const pk=[[L,T],[400,T-4],[RR,T],[L,B],[400,B+4],[RR,B]];
+const base=['#f2c40f','#1f4fb8','#e03a1e','#6b2a8f','#f08a1c','#1f9a45','#8f1d1d'];
+let balls,drag=null,msg='',turn,shotOn,pot,over,plan,scr,preLeft,pwr=0;
+const col=n=>n===8?'#111':n===0?'#f3f0e6':base[(n<8?n:n-8)-1];
+const cue=()=>balls.find(b=>b.n===0);
+const own=(b,w)=>b.n&&b.n!==8&&((b.n<8)===(w==='me'));
+const left=w=>balls.filter(b=>own(b,w)).length;
+const moving=()=>balls.some(b=>Math.hypot(b.vx,b.vy)>0.03);
+const p2NameText=()=>mode2P?t().p2Label:t().aiLabel;
+
+function init(){
+  const ids=[1,2,3,4,5,6,7,9,10,11,12,13,14,15].sort(()=>Math.random()-.5);
+  ids.splice(4,0,8);
+  balls=[{x:200,y:200,vx:0,vy:0,n:0}];let k=0;
+  for(let r=0;r<5;r++)for(let i=0;i<=r;i++)balls.push({x:540+r*R*1.75,y:200+(i-r/2)*R*2.05,vx:0,vy:0,n:ids[k++]});
+  turn='me';shotOn=false;pot=[];over=false;plan=null;scr=false;
+  msg=mode2P?t().initMsg2P:t().initMsgAI;
+}
+function upd(){
+  document.getElementById('s').textContent=t().youLabel+': '+left('me')+' | '+p2NameText()+': '+left('ai');
+  if(over){document.getElementById('r').textContent='';return}
+  if(turn==='me')document.getElementById('r').textContent=t().yourTurn;
+  else document.getElementById('r').textContent=mode2P?t().p2Turn:t().aiTurn;
+}
+function step(){
+  for(let s=0;s<4;s++){
+    for(const b of balls){
+      b.x+=b.vx/4;b.y+=b.vy/4;
+      if(b.x<L+R){b.x=L+R;b.vx=Math.abs(b.vx)*.9}
+      if(b.x>RR-R){b.x=RR-R;b.vx=-Math.abs(b.vx)*.9}
+      if(Math.abs(b.x-400)>PR+2){
+        if(b.y<T+R){b.y=T+R;b.vy=Math.abs(b.vy)*.9}
+        if(b.y>B-R){b.y=B-R;b.vy=-Math.abs(b.vy)*.9}
+      }
+    }
+    for(let i=0;i<balls.length;i++)for(let j=i+1;j<balls.length;j++){
+      const a=balls[i],b=balls[j],dx=b.x-a.x,dy=b.y-a.y,d=Math.hypot(dx,dy);
+      if(d<2*R&&d>0){
+        const nx=dx/d,ny=dy/d,ov=(2*R-d)/2;
+        a.x-=nx*ov;a.y-=ny*ov;b.x+=nx*ov;b.y+=ny*ov;
+        const p=(a.vx-b.vx)*nx+(a.vy-b.vy)*ny;
+        if(p>0){a.vx-=p*nx;a.vy-=p*ny;b.vx+=p*nx;b.vy+=p*ny}
+      }
+    }
+  }
+  for(const b of balls){roll(b);b.vx*=.988;b.vy*=.988;if(Math.hypot(b.vx,b.vy)<0.03)b.vx=b.vy=0}
+  balls=balls.filter(b=>{
+    if(pk.some(p=>Math.hypot(b.x-p[0],b.y-p[1])<PR)){pot.push(b.n);if(b.n===0)scr=true;return false}
+    return true;
+  });
+}
+function shoot(a,v){
+  const q=cue();q.vx=Math.cos(a)*v;q.vy=Math.sin(a)*v;
+  shotOn=true;pot=[];scr=false;preLeft=left(turn);msg='';
+}
+function endShot(){
+  shotOn=false;
+  const w=turn,o=w==='me'?'ai':'me',nm=w==='me'?t().youLabel:p2NameText();
+  if(pot.includes(8)){
+    over=true;
+    const win=(preLeft===0&&!scr)?w:o;
+    if(win==='me'){
+      const reward = 1000 + profile.level * 150;
+      addCoins(reward);
+      gainPlayProgress(true);
+      msg = t().winMsg + ` (+${reward.toLocaleString()})`;
+    }else{
+      gainPlayProgress(false);
+      msg = mode2P?t().p2WinMsg:t().loseMsg;
+    }
+    return;
+  }
+  const legalPots = pot.filter(n => n !== 0 && n !== 8).length;
+  if(legalPots > 0 && w === 'me'){
+    addCoins(legalPots * 100);
+  }
+  if(scr){
+    let x=200,y=200;while(balls.some(b=>Math.hypot(b.x-x,b.y-y)<2*R))y+=3;
+    balls.push({x,y,vx:0,vy:0,n:0});
+    turn=o;msg=nm+t().whitePot;
+  }else if(pot.some(n=>own({n},w)))msg=nm+t().pottedKeep;
+  else{turn=o;msg=t().turnOf+(o==='me'?t().youLabel:p2NameText());}
+}
+function predict(q,a){
+  const dx=Math.cos(a),dy=Math.sin(a);let t=1e9,hit=null;
+  if(dx>1e-6)t=Math.min(t,(RR-R-q.x)/dx);else if(dx<-1e-6)t=Math.min(t,(L+R-q.x)/dx);
+  if(dy>1e-6)t=Math.min(t,(B-R-q.y)/dy);else if(dy<-1e-6)t=Math.min(t,(T+R-q.y)/dy);
+  for(const b of balls){
+    if(b===q)continue;
+    const fx=q.x-b.x,fy=q.y-b.y,Bq=fx*dx+fy*dy,D=Bq*Bq-(fx*fx+fy*fy-4*R*R);
+    if(D>=0){const s=-Bq-Math.sqrt(D);if(s>0&&s<t){t=s;hit=b}}
+  }
+  return{dx,dy,hit,x:q.x+dx*t,y:q.y+dy*t};
+}
+function seg(x1,y1,x2,y2,c,w){g.strokeStyle=c;g.lineWidth=w;g.beginPath();g.moveTo(x1,y1);g.lineTo(x2,y2);g.stroke()}
+function drawAim(q,a,d){
+  const p=predict(q,a);
+  g.lineCap='round';g.setLineDash([7,6]);seg(q.x,q.y,p.x,p.y,'rgba(255,255,255,.85)',2);g.setLineDash([]);
+  g.beginPath();g.arc(p.x,p.y,R,0,7);g.strokeStyle='rgba(255,255,255,.9)';g.lineWidth=1.5;g.stroke();
+  if(p.hit){
+    const nx=p.hit.x-p.x,ny=p.hit.y-p.y,nl=Math.hypot(nx,ny),ux=nx/nl,uy=ny/nl;
+    seg(p.hit.x,p.hit.y,p.hit.x+ux*80,p.hit.y+uy*80,'#ffd23f',3);
+    const dot=p.dx*ux+p.dy*uy,tx=p.dx-dot*ux,ty=p.dy-dot*uy;
+    seg(p.x,p.y,p.x+tx*45,p.y+ty*45,'rgba(255,255,255,.45)',2);
+  }else{
+    let rx=p.dx,ry=p.dy;
+    if(Math.abs(p.x-(RR-R))<1||Math.abs(p.x-(L+R))<1)rx=-rx;
+    if(Math.abs(p.y-(B-R))<1||Math.abs(p.y-(T+R))<1)ry=-ry;
+    g.setLineDash([4,6]);seg(p.x,p.y,p.x+rx*90,p.y+ry*90,'rgba(255,255,255,.4)',2);g.setLineDash([]);
+  }
+  drawCue(q,a,R+6+d*.5);
+}
+/* ===== الكور ثلاثية الأبعاد ===== */
+const tn=64,tex={},rgbC={},imgs={},icons={};
+for(let n=1;n<=15;n++){
+  const c=document.createElement('canvas');c.width=c.height=tn;const t=c.getContext('2d');
+  t.fillStyle='#000';t.font='bold '+(n>9?30:42)+'px sans-serif';t.textAlign='center';t.textBaseline='middle';t.fillText(n,tn/2,tn/2+2);
+  tex[n]=t.getImageData(0,0,tn,tn).data;
+}
+const rgb=h=>rgbC[h]||(rgbC[h]=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)));
+function rot(x,y,z,t){
+  const c=Math.cos(t),s=Math.sin(t),u=1-c;
+  return[c+x*x*u,x*y*u-z*s,x*z*u+y*s,y*x*u+z*s,c+y*y*u,y*z*u-x*s,z*x*u-y*s,z*y*u+x*s,c+z*z*u];
+}
+function mul(A,B){const r=[];for(let i=0;i<3;i++)for(let j=0;j<3;j++)r.push(A[i*3]*B[j]+A[i*3+1]*B[3+j]+A[i*3+2]*B[6+j]);return r}
+function randRot(){
+  let x=Math.random()-.5,y=Math.random()-.5,z=Math.random()-.5;const l=Math.hypot(x,y,z)||1;
+  return rot(x/l,y/l,z/l,Math.random()*6.283);
+}
+function roll(b){
+  if(!b.M)b.M=randRot();
+  const s=Math.hypot(b.vx,b.vy);if(s<.01)return;
+  b.M=mul(rot(-b.vy/s,b.vx/s,0,s/R),b.M);b.dirty=true;
+}
+function paint(c,n,M,N){
+  const x=c.getContext('2d'),im=imgs[N]||(imgs[N]=x.createImageData(N,N)),D=im.data,C=rgb(col(n));
+  for(let j=0;j<N;j++)for(let i=0;i<N;i++){
+    const nx=(i+.5)/N*2-1,ny=(j+.5)/N*2-1,rr=Math.sqrt(nx*nx+ny*ny),o=(j*N+i)*4;
+    if(rr>1.03){D[o+3]=0;continue}
+    const nz=Math.sqrt(Math.max(0,1-rr*rr));
+    const lx=M[0]*nx+M[3]*ny+M[6]*nz,ly=M[1]*nx+M[4]*ny+M[7]*nz,lz=M[2]*nx+M[5]*ny+M[8]*nz,al=Math.abs(lz);
+    let r=C[0],gg=C[1],bb=C[2];
+    if(n>8&&al>.56)r=gg=bb=246;
+    if(n&&al>.9){
+      r=gg=bb=250;
+      const u=Math.floor(((lz>0?lx:-lx)/.436+1)*tn/2),v=Math.floor((ly/.436+1)*tn/2);
+      if(u>=0&&u<tn&&v>=0&&v<tn){const a=tex[n][(v*tn+u)*4+3]/255;r=r*(1-a)+15*a;gg=gg*(1-a)+15*a;bb=bb*(1-a)+15*a}
+    }
+    if(!n&&(Math.abs(lx)>.985||Math.abs(ly)>.985||al>.985)){r=190;gg=40;bb=40}
+    const df=Math.max(0,-.45*nx-.6*ny+.66*nz);
+    const h=Math.max(0,-.247*nx-.329*ny+.911*nz),h2=h*h,h4=h2*h2,h8=h4*h4,h16=h8*h8,h32=h16*h16,sp=h32*h32*h4*h2;
+    const k=(.3+.8*df)*(.8+.2*nz);
+    D[o]=Math.min(255,r*k+230*sp);D[o+1]=Math.min(255,gg*k+230*sp);D[o+2]=Math.min(255,bb*k+230*sp);
+    D[o+3]=Math.max(0,Math.min(1,(1-rr)*N/2+.5))*255;
+  }
+  x.putImageData(im,0,0);
+}
+const POSE=rot(1,0,0,1.15);
+function icon(n){
+  if(!icons[n]){const N=Math.ceil(20*Sc),c=document.createElement('canvas');c.width=c.height=N;paint(c,n,POSE,N);icons[n]=c}
+  return icons[n];
+}
+function ball(b){
+  if(!b.M)b.M=randRot();
+  const N=Math.ceil(2*R*Sc);
+  if(!b.spr){b.spr=document.createElement('canvas');b.spr.width=b.spr.height=N;b.dirty=true}
+  if(b.dirty){paint(b.spr,b.n,b.M,N);b.dirty=false}
+  g.save();g.shadowColor='rgba(0,0,0,.55)';g.shadowBlur=9*Sc;g.shadowOffsetX=3*Sc;g.shadowOffsetY=5*Sc;
+  g.beginPath();g.arc(b.x,b.y,R*.97,0,7);g.fillStyle=col(b.n);g.fill();g.restore();
+  g.drawImage(b.spr,b.x-R,b.y-R,2*R,2*R);
+}
+/* ===== الطاولة والخلفية ===== */
+const tbl=document.createElement('canvas');tbl.width=CW*Sc;tbl.height=CH*Sc;
+(function(){
+  const t=tbl.getContext('2d');t.scale(Sc,Sc);
+  const pn=t.createLinearGradient(0,0,0,CH);pn.addColorStop(0,'#2b2723');pn.addColorStop(1,'#12100e');
+  t.fillStyle=pn;t.beginPath();t.roundRect(0,0,CW,CH,22);t.fill();
+  const w=t.createLinearGradient(0,0,0,H);
+  w.addColorStop(0,'#7a4a24');w.addColorStop(.5,'#5a3417');w.addColorStop(1,'#3e230e');
+  t.fillStyle=w;t.beginPath();t.roundRect(0,0,W,H,20);t.fill();
+  for(let i=0;i<140;i++){
+    const y=Math.random()*H;t.strokeStyle='rgba(0,0,0,'+Math.random()*.13+')';t.lineWidth=Math.random()*1.4;
+    t.beginPath();t.moveTo(0,y);t.bezierCurveTo(W*.3,y+Math.random()*6-3,W*.7,y+Math.random()*6-3,W,y+Math.random()*4-2);t.stroke();
+  }
+  t.fillStyle='#e9dcc0';
+  for(let i=1;i<8;i++){if(i===4)continue;const x=L+(RR-L)*i/8;for(const y of[11,H-11]){t.beginPath();t.arc(x,y,2.6,0,7);t.fill()}}
+  for(let j=1;j<4;j++){const y=T+(B-T)*j/4;for(const x of[11,W-11]){t.beginPath();t.arc(x,y,2.6,0,7);t.fill()}}
+  t.fillStyle='#124a26';t.fillRect(L-10,T-10,RR-L+20,B-T+20);
+  const f=t.createRadialGradient(W/2,H/2,40,W/2,H/2,W*.62);
+  f.addColorStop(0,'#2b8c48');f.addColorStop(.6,'#1f7a3d');f.addColorStop(1,'#145c2c');
+  t.fillStyle=f;t.fillRect(L,T,RR-L,B-T);
+  const nt=document.createElement('canvas');nt.width=nt.height=256;
+  const nc=nt.getContext('2d'),ni=nc.createImageData(256,256);
+  for(let i=0;i<ni.data.length;i+=4){const v=128+(Math.random()-.5)*90;ni.data[i]=ni.data[i+1]=ni.data[i+2]=v;ni.data[i+3]=255}
+  nc.putImageData(ni,0,0);
+  t.save();t.setTransform(1,0,0,1,0,0);t.globalCompositeOperation='overlay';t.globalAlpha=.55;
+  t.fillStyle=t.createPattern(nt,'repeat');t.fillRect(L*Sc,T*Sc,(RR-L)*Sc,(B-T)*Sc);t.restore();
+  t.strokeStyle='rgba(0,0,0,.4)';t.lineWidth=2;t.strokeRect(L,T,RR-L,B-T);
+  for(const p of pk){
+    const r=t.createRadialGradient(p[0],p[1],PR*.6,p[0],p[1],PR+5);
+    r.addColorStop(0,'#000');r.addColorStop(.8,'#050505');r.addColorStop(1,'#2b1a0c');
+    t.fillStyle=r;t.beginPath();t.arc(p[0],p[1],PR+5,0,7);t.fill();
+  }
+})();
+function drawCue(q,a,o){
+  const ux=-Math.cos(a),uy=-Math.sin(a),nx=-uy,ny=ux,len=300;
+  const x0=q.x+ux*o,y0=q.y+uy*o,x1=x0+ux*len,y1=y0+uy*len,w0=2.2,w1=5.5;
+  g.save();
+  g.shadowColor='rgba(0,0,0,.45)';g.shadowBlur=6*Sc;g.shadowOffsetX=4*Sc;g.shadowOffsetY=5*Sc;
+  const gr=g.createLinearGradient(x0,y0,x1,y1);
+  gr.addColorStop(0,'#f1dcae');gr.addColorStop(.7,'#d9b273');gr.addColorStop(.72,'#3a2412');gr.addColorStop(1,'#2a1a0c');
+  g.fillStyle=gr;g.beginPath();
+  g.moveTo(x0+nx*w0,y0+ny*w0);g.lineTo(x1+nx*w1,y1+ny*w1);g.lineTo(x1-nx*w1,y1-ny*w1);g.lineTo(x0-nx*w0,y0-ny*w0);
+  g.closePath();g.fill();
+  g.restore();
+  seg(x0,y0,x0+ux*10,y0+uy*10,'#f8f8f8',w0*2);
+  seg(x0,y0,x0+ux*3,y0+uy*3,'#4a7fd6',w0*2);
+  seg(x0+ux*14-nx*w0*.5,y0+uy*14-ny*w0*.5,x0+ux*len*.65-nx*w1*.5,y0+uy*len*.65-ny*w1*.5,'rgba(255,255,255,.35)',1);
+}
+/* ===== شريط القوة على الجنب ===== */
+function powerBar(){
+  const x=822,w=36,h=B-T,lv=Math.min(1,pwr);
+  g.save();g.beginPath();g.roundRect(x,T,w,h,8);g.clip();
+  g.fillStyle='rgba(0,0,0,.55)';g.fillRect(x,T,w,h);
+  const gr=g.createLinearGradient(0,B,0,T);
+  gr.addColorStop(0,'#4cd964');gr.addColorStop(.55,'#f5c518');gr.addColorStop(1,'#e03a1e');
+  g.fillStyle=gr;g.fillRect(x,B-h*lv,w,h*lv);
+  g.fillStyle='rgba(255,255,255,.35)';
+  for(let i=1;i<10;i++)g.fillRect(x,B-h*i/10,i%5?10:w,1.2);
+  g.restore();
+  g.strokeStyle='rgba(255,255,255,.5)';g.lineWidth=2;g.beginPath();g.roundRect(x,T,w,h,8);g.stroke();
+  g.fillStyle='#fff';g.font='bold 13px sans-serif';g.textAlign='center';g.textBaseline='middle';
+  g.fillText(t().pwrLabel,x+w/2,T-14);g.fillText(Math.round(lv*100)+'%',x+w/2,B+16);
+}
+/* ===== الكور المتبقية تحت الطاولة ===== */
+function tray(){
+  const y=450;
+  g.font='bold 13px sans-serif';g.textBaseline='middle';
+  g.fillStyle=(turn==='me'&&!over)?'#ffd23f':'rgba(255,255,255,.65)';
+  g.textAlign='left';g.fillText(t().p1Solids,20,418);
+  g.fillStyle=(turn==='ai'&&!over)?'#ffd23f':'rgba(255,255,255,.65)';
+  g.textAlign='right';g.fillText(mode2P?t().p2Stripes2P:t().p2StripesAI,CW-20,418);
+  const slot=(n,x)=>{
+    g.beginPath();g.arc(x,y,10.5,0,7);g.strokeStyle='rgba(255,255,255,.15)';g.lineWidth=1.5;g.stroke();
+    if(balls.some(b=>b.n===n))g.drawImage(icon(n),x-10,y-10,20,20);
+  };
+  for(let i=0;i<7;i++){slot(i+1,34+i*36);slot(i+9,CW-34-i*36)}
+  slot(8,CW/2);
+}
+function draw(){
+  g.setTransform(Sc,0,0,Sc,0,0);
+  g.drawImage(tbl,0,0,CW,CH);
+  const q=cue();pwr=0;
+  if(q&&!over){
+    if(drag&&!shotOn&&(turn==='me'||mode2P)){
+      const dx=drag.s.x-drag.c.x,dy=drag.s.y-drag.c.y,d=Math.min(Math.hypot(dx,dy),150);
+      drawAim(q,Math.atan2(dy,dx),d);pwr=d/150;
+    }else if(!mode2P&&turn==='ai'&&plan){
+      const d=Math.min(plan.v/.17,150);drawAim(q,plan.a,d);pwr=d/150;
+    }
+  }
+  for(const b of balls)ball(b);
+  if(msg){g.fillStyle='#fff';g.font='bold 15px sans-serif';g.textAlign='center';g.textBaseline='alphabetic';g.fillText(msg,W/2,23)}
+  powerBar();tray();
+}
+function clear(x1,y1,x2,y2,ex,r){
+  const vx=x2-x1,vy=y2-y1,l2=vx*vx+vy*vy;
+  for(const b of balls){
+    if(ex.includes(b))continue;
+    let u=l2?((b.x-x1)*vx+(b.y-y1)*vy)/l2:0;u=Math.max(0,Math.min(1,u));
+    if(Math.hypot(x1+vx*u-b.x,y1+vy*u-b.y)<r)return false;
+  }
+  return true;
+}
+function aiTurn(){
+  if(mode2P)return;
+  if(!plan){
+    const q=cue(),mine=left('ai')>0,tg=balls.filter(b=>mine?own(b,'ai'):b.n===8);
+    let best=null;
+    for(const b of tg)for(const p of pk){
+      const pdx=p[0]-b.x,pdy=p[1]-b.y,pd=Math.hypot(pdx,pdy),ux=pdx/pd,uy=pdy/pd;
+      const gx=b.x-ux*2*R,gy=b.y-uy*2*R;
+      if(gx<L+R||gx>RR-R||gy<T+R||gy>B-R)continue;
+      const cx=gx-q.x,cy=gy-q.y,cd=Math.hypot(cx,cy);if(cd<1)continue;
+      const cut=(cx*ux+cy*uy)/cd;if(cut<.35)continue;
+      if(!clear(q.x,q.y,gx,gy,[q,b],2*R-2)||!clear(b.x,b.y,p[0],p[1],[q,b],R+1))continue;
+      const sc=cut*100-(cd+pd)*.05;
+      if(!best||sc>best.sc)best={sc,a:Math.atan2(cy,cx),v:(cd+pd)/83*1.5+2.2};
+    }
+    if(!best){const b=tg[0]||balls.find(x=>x.n);best={a:Math.atan2(b.y-q.y,b.x-q.x),v:8+Math.random()*6}}
+    best.a+=(Math.random()-.5)*.035;best.v=Math.min(Math.max(best.v,4),26);
+    plan={a:best.a,v:best.v,t:performance.now()};msg=t().aiAimMsg;
+  }else if(performance.now()-plan.t>1000){const p=plan;plan=null;shoot(p.a,p.v)}
+}
+function loop(){
+  step();
+  if(shotOn&&!moving())endShot();
+  else if(!mode2P&&!shotOn&&!over&&turn==='ai'&&!moving())aiTurn();
+  upd();draw();requestAnimationFrame(loop);
+}
+function pos(e){const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)*CW/r.width,y:(e.clientY-r.top)*CH/r.height}}
+cv.onpointerdown=e=>{
+  if((!mode2P&&turn!=='me')||shotOn||over||moving()||!cue())return;
+  drag={s:pos(e),c:pos(e)};msg='';cv.setPointerCapture(e.pointerId)
+};
+cv.onpointermove=e=>{if(drag)drag.c=pos(e)};
+cv.onpointerup=()=>{
+  if(!drag)return;
+  const dx=drag.s.x-drag.c.x,dy=drag.s.y-drag.c.y,d=Math.min(Math.hypot(dx,dy),150);
+  drag=null;
+  if(d>6)shoot(Math.atan2(dy,dx),d*.17);
+};
+document.getElementById('rs').onclick=init;
+init();applyLang();loop();
+</script>
+</body>
+</html>
